@@ -1,4 +1,4 @@
-# Project 1 - *Name of App Here*
+# Project 1 - *FLICK APP*
 
 **FLICK APP** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
@@ -32,7 +32,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-[Imgur](http://i.imgur.com/AeJA25C.gifv)
+<img src='http://i.imgur.com/AeJA25C.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
