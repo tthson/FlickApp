@@ -1,4 +1,4 @@
-# Project 1 - *FLICK APP*
+# Project 1 - *Name of App Here*
 
 **FLICK APP** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
