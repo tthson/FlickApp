@@ -8,14 +8,35 @@
 
 import UIKit
 import AFNetworking
+import MBProgressHUD
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
+    var refreshControl = UIRefreshControl()
     var movies = [NSDictionary]()
     var baseUrl = "http://image.tmdb.org/t/p/original"
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Initialize a UIRefreshControl
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+        refreshControlAction(refreshControl)
+
+        
+        
+
+        // Do any additional setup after loading the view.
+    }
+    // Makes a network request to get updated data
+    // Updates the tableView with the new data
+    // Hides the RefreshControl
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        
+        // ... Create the NSURLRequest (myRequest) ...
+        
+        // Configure session so that completion handler is executed on main UI thread
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -31,20 +52,28 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             delegate: nil,
             delegateQueue: NSOperationQueue.mainQueue()
         )
+        // Display HUD right before the request is made
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         
         let task: NSURLSessionDataTask = session.dataTaskWithRequest(request,
                                                                      completionHandler: { (dataOrNil, response, error) in
+                                                                        // Hide HUD once the network request comes back (must be done on main UI thread)
+                                                                        MBProgressHUD.hideHUDForView(self.view, animated: true)
+                                                                        
+                                                                        // Reload the tableView now that there is new data
+                                                                        self.tableView.reloadData()
+                                                                        
+                                                                        // Tell the refreshControl to stop spinning
+                                                                        refreshControl.endRefreshing()
                                                                         if let data = dataOrNil {
                                                                             if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                                                                                 data, options:[]) as? NSDictionary {
                                                                                 //print("response: \(responseDictionary)")
                                                                                 self.movies = responseDictionary["results"] as! [NSDictionary]
-                                             self.tableView.reloadData()                               }
+                                                                                self.tableView.reloadData()                               }
                                                                         }
         })
         task.resume()
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
